@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generating Entanglement - Multiple-Qubit States</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concept 7: Generating Entanglement</h1>
+            <p class="subtitle">Creating Bell States with Hadamard and CNOT</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <a href="../06-quantum-gates/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../08-measurement/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+
+        <div class="section full-width">
+            <h2>Interactive Entanglement Circuit</h2>
+            <div id="canvas-container"></div>
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label>Circuit Step: <span class="value-display" id="step-display">0 - Initial State</span></label>
+                    <input type="range" class="slider" id="step-slider" min="0" max="2" value="0">
+                </div>
+                <div class="state-info">
+                    <h4 id="state-name">Initial State</h4>
+                    <p id="state-formula">|ψ⟩ = |00⟩</p>
+                    <p id="state-description">Both qubits start in the |0⟩ state</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="section full-width">
+                <h2>The Entanglement Circuit</h2>
+                <p>Starting from |00⟩, we can create the Bell state |Φ<sup>+</sup>⟩ using just two gates:</p>
+                
+                <div class="circuit-container">
+                    <pre style="color: #00d4ff; font-size: 1.2em; text-align: center;">
+    |0⟩ ──[H]──●──  →  (|00⟩ + |11⟩)/√2
+               │
+    |0⟩ ───────⊕──  →  Bell State |Φ+⟩
+                    </pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Step 1: Hadamard Gate</h2>
+                <p>Apply a Hadamard gate to the first qubit:</p>
+                
+                <div class="formula">
+                    (H ⊗ I)|00⟩ = H|0⟩ ⊗ |0⟩
+                </div>
+                
+                <div class="formula">
+                    = |+⟩ ⊗ |0⟩ = (|0⟩ + |1⟩)/√2 ⊗ |0⟩
+                </div>
+                
+                <div class="formula">
+                    = (|00⟩ + |10⟩)/√2
+                </div>
+                
+                <div class="key-point">
+                    <strong>Result:</strong> The first qubit is now in superposition, but the qubits are still NOT entangled (this is a product state).
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Step 2: CNOT Gate</h2>
+                <p>Apply CNOT with qubit 1 as control and qubit 2 as target:</p>
+                
+                <div class="formula">
+                    CNOT · (|00⟩ + |10⟩)/√2
+                </div>
+                
+                <div class="formula">
+                    = (CNOT|00⟩ + CNOT|10⟩)/√2
+                </div>
+                
+                <div class="formula">
+                    = (|00⟩ + |11⟩)/√2 = |Φ<sup>+</sup>⟩
+                </div>
+                
+                <div class="key-point">
+                    <strong>Result:</strong> We have created an entangled Bell state! The qubits are now correlated in a way that cannot be described by individual qubit states.
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Why Does This Create Entanglement?</h2>
+                
+                <div class="example">
+                    <h3>The Key Insight</h3>
+                    <p>After the Hadamard, we have a superposition: (|00⟩ + |10⟩)/√2</p>
+                    <p>The CNOT acts differently on each term:</p>
+                    <ul>
+                        <li>|00⟩: Control is 0, target unchanged → |00⟩</li>
+                        <li>|10⟩: Control is 1, target FLIPPED → |11⟩</li>
+                    </ul>
+                    <p>The result (|00⟩ + |11⟩)/√2 cannot be factored into separate qubit states!</p>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Creating All Four Bell States</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Initial State</th>
+                            <th>After H ⊗ I</th>
+                            <th>After CNOT</th>
+                            <th>Bell State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>|00⟩</td>
+                            <td>(|00⟩ + |10⟩)/√2</td>
+                            <td>(|00⟩ + |11⟩)/√2</td>
+                            <td>|Φ<sup>+</sup>⟩</td>
+                        </tr>
+                        <tr>
+                            <td>|01⟩</td>
+                            <td>(|01⟩ + |11⟩)/√2</td>
+                            <td>(|01⟩ + |10⟩)/√2</td>
+                            <td>|Ψ<sup>+</sup>⟩</td>
+                        </tr>
+                        <tr>
+                            <td>|10⟩</td>
+                            <td>(|00⟩ - |10⟩)/√2</td>
+                            <td>(|00⟩ - |11⟩)/√2</td>
+                            <td>|Φ<sup>-</sup>⟩</td>
+                        </tr>
+                        <tr>
+                            <td>|11⟩</td>
+                            <td>(|01⟩ - |11⟩)/√2</td>
+                            <td>(|01⟩ - |10⟩)/√2</td>
+                            <td>|Ψ<sup>-</sup>⟩</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section full-width">
+                <h2>Python Example: Creating Bell States</h2>
+                
+                <div class="code-block">
+<pre>import numpy as np
+
+# Gates
+I = np.eye(2)
+H = np.array([[1, 1], [1, -1]]) / np.sqrt(2)
+CNOT = np.array([
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 0, 1],
+    [0, 0, 1, 0]
+])
+
+# Initial state |00⟩
+ket_00 = np.array([1, 0, 0, 0])
+
+print("Creating Bell State |Φ+⟩:")
+print(f"Step 0: |00⟩ = {ket_00}")
+
+# Step 1: Apply H ⊗ I
+H_I = np.kron(H, I)
+step1 = H_I @ ket_00
+print(f"Step 1: (H⊗I)|00⟩ = {step1}")
+print(f"        = {step1[0]:.4f}|00⟩ + {step1[2]:.4f}|10⟩")
+
+# Step 2: Apply CNOT
+step2 = CNOT @ step1
+print(f"Step 2: CNOT(H⊗I)|00⟩ = {step2}")
+print(f"        = {step2[0]:.4f}|00⟩ + {step2[3]:.4f}|11⟩")
+print(f"        = |Φ+⟩ (Bell State!)")
+
+# Verify it's normalized
+print(f"\nNormalization: {np.sum(np.abs(step2)**2):.4f}")
+
+# Create all Bell states
+def create_bell_state(initial):
+    """Create Bell state from initial computational basis state."""
+    return CNOT @ (H_I @ initial)
+
+ket_01 = np.array([0, 1, 0, 0])
+ket_10 = np.array([0, 0, 1, 0])
+ket_11 = np.array([0, 0, 0, 1])
+
+print("\nAll Bell States:")
+print(f"|Φ+⟩ from |00⟩: {create_bell_state(ket_00)}")
+print(f"|Ψ+⟩ from |01⟩: {create_bell_state(ket_01)}")
+print(f"|Φ-⟩ from |10⟩: {create_bell_state(ket_10)}")
+print(f"|Ψ-⟩ from |11⟩: {create_bell_state(ket_11)}")</pre>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Key Takeaways</h2>
+                <div class="key-point">
+                    <ul>
+                        <li>Entanglement is created by applying Hadamard followed by CNOT</li>
+                        <li>Hadamard creates superposition, CNOT creates correlation</li>
+                        <li>All four Bell states can be created from different initial states</li>
+                        <li>This circuit is fundamental to quantum computing and communication</li>
+                        <li>The process is reversible: applying the same gates in reverse disentangles the qubits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="../06-quantum-gates/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../08-measurement/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let qubit1, qubit2, entanglementLine;
+        let currentStep = 0;
+        
+        const stepInfo = [
+            { name: 'Initial State', formula: '|ψ⟩ = |00⟩', desc: 'Both qubits start in the |0⟩ state (pointing up)' },
+            { name: 'After Hadamard', formula: '|ψ⟩ = (|00⟩ + |10⟩)/√2', desc: 'First qubit in superposition, but NOT entangled yet' },
+            { name: 'After CNOT (Bell State)', formula: '|ψ⟩ = (|00⟩ + |11⟩)/√2 = |Φ+⟩', desc: 'Qubits are now ENTANGLED! Measuring one determines the other.' }
+        ];
+        
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 12);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            
+            createVisualization();
+            setupControls();
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00d4ff, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+        }
+        
+        function createVisualization() {
+            qubit1 = createBlochSphere(-3, 0, 0, 0x00d4ff, "Qubit 1");
+            qubit2 = createBlochSphere(3, 0, 0, 0xff6b9d, "Qubit 2");
+            
+            // Entanglement line (hidden initially)
+            const curve = new THREE.QuadraticBezierCurve3(
+                new THREE.Vector3(-3, 0, 0),
+                new THREE.Vector3(0, 2, 0),
+                new THREE.Vector3(3, 0, 0)
+            );
+            const points = curve.getPoints(50);
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0 });
+            entanglementLine = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(entanglementLine);
+            
+            // Circuit elements
+            createCircuitElements();
+        }
+        
+        function createBlochSphere(x, y, z, color, label) {
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+            
+            const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+            const sphereMaterial = new THREE.MeshBasicMaterial({
+                color: color,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            group.add(sphere);
+            
+            const arrowGroup = new THREE.Group();
+            const shaftGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1.2, 16);
+            const shaftMaterial = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.3 });
+            const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
+            shaft.position.y = 0.6;
+            arrowGroup.add(shaft);
+            
+            const coneGeometry = new THREE.ConeGeometry(0.15, 0.3, 16);
+            const cone = new THREE.Mesh(coneGeometry, shaftMaterial);
+            cone.position.y = 1.35;
+            arrowGroup.add(cone);
+            
+            group.add(arrowGroup);
+            group.arrow = arrowGroup;
+            
+            addLabel(x, y - 2.5, z, label);
+            
+            scene.add(group);
+            return group;
+        }
+        
+        function createCircuitElements() {
+            // H gate box
+            const hGeometry = new THREE.BoxGeometry(0.8, 0.8, 0.1);
+            const hMaterial = new THREE.MeshPhongMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.7 });
+            const hBox = new THREE.Mesh(hGeometry, hMaterial);
+            hBox.position.set(-3, 3, 0);
+            scene.add(hBox);
+            addLabel(-3, 3, 0.5, "H");
+            
+            // CNOT symbol
+            addLabel(0, 3, 0, "CNOT");
+        }
+        
+        function addLabel(x, y, z, text) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, 64, 40);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.position.set(x, y, z);
+            sprite.scale.set(2, 1, 1);
+            scene.add(sprite);
+        }
+        
+        function setupControls() {
+            const slider = document.getElementById('step-slider');
+            const stepDisplay = document.getElementById('step-display');
+            const stateName = document.getElementById('state-name');
+            const stateFormula = document.getElementById('state-formula');
+            const stateDesc = document.getElementById('state-description');
+            
+            slider.addEventListener('input', (e) => {
+                currentStep = parseInt(e.target.value);
+                const info = stepInfo[currentStep];
+                stepDisplay.textContent = `${currentStep} - ${info.name}`;
+                stateName.textContent = info.name;
+                stateFormula.textContent = info.formula;
+                stateDesc.textContent = info.desc;
+                updateVisualization();
+            });
+        }
+        
+        function updateVisualization() {
+            switch(currentStep) {
+                case 0: // Initial |00⟩
+                    qubit1.arrow.rotation.x = 0;
+                    qubit2.arrow.rotation.x = 0;
+                    entanglementLine.material.opacity = 0;
+                    break;
+                case 1: // After Hadamard
+                    qubit1.arrow.rotation.x = Math.PI / 2; // Pointing sideways (superposition)
+                    qubit2.arrow.rotation.x = 0;
+                    entanglementLine.material.opacity = 0;
+                    break;
+                case 2: // After CNOT (entangled)
+                    qubit1.arrow.rotation.x = Math.PI / 4;
+                    qubit2.arrow.rotation.x = Math.PI / 4;
+                    entanglementLine.material.opacity = 0.8;
+                    break;
+            }
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            
+            if (currentStep === 2) {
+                // Entangled: correlated motion
+                const angle = Math.sin(time) * 0.3;
+                qubit1.arrow.rotation.z = angle;
+                qubit2.arrow.rotation.z = angle;
+                entanglementLine.material.opacity = 0.5 + Math.sin(time * 3) * 0.3;
+            } else {
+                qubit1.arrow.rotation.z = Math.sin(time * 0.5) * 0.1;
+                qubit2.arrow.rotation.z = Math.sin(time * 0.5 + 1) * 0.1;
+            }
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

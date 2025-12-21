@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partial Trace & Subsystems - Multiple-Qubit States</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concept 10: Partial Trace & Subsystems</h1>
+            <p class="subtitle">Describing Parts of Larger Quantum Systems</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <a href="../09-n-qubit-states/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../11-ghz-state/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+
+        <div class="section full-width">
+            <h2>Interactive Partial Trace Visualization</h2>
+            <div id="canvas-container"></div>
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label>Joint State:</label>
+                    <select id="state-select" style="padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.5); color: white; border: 1px solid #00d4ff; width: 100%;">
+                        <option value="product">Product State |0⟩⊗|0⟩</option>
+                        <option value="bell">Bell State |Φ+⟩ (Entangled)</option>
+                    </select>
+                </div>
+                <div class="state-info">
+                    <h4>Reduced Density Matrix of Qubit A</h4>
+                    <p id="reduced-state">ρ_A = |0⟩⟨0| (Pure state)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="section">
+                <h2>What is the Partial Trace?</h2>
+                <p>The <span class="highlight">partial trace</span> is a mathematical operation that allows us to describe a subsystem of a larger quantum system.</p>
+                
+                <div class="formula">
+                    ρ<sub>A</sub> = Tr<sub>B</sub>(ρ<sub>AB</sub>)
+                </div>
+                
+                <p>This "traces out" (discards) the degrees of freedom of subsystem B, leaving only the description of subsystem A.</p>
+                
+                <div class="key-point">
+                    <strong>Why is this useful?</strong> When we only have access to part of a quantum system, the partial trace tells us everything we can know about that part.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Density Matrices</h2>
+                <p>To use partial trace, we first need to express our state as a <span class="highlight">density matrix</span>:</p>
+                
+                <div class="formula">
+                    ρ = |ψ⟩⟨ψ|
+                </div>
+                
+                <p>For a pure state |ψ⟩, the density matrix is the outer product of the state with itself.</p>
+                
+                <div class="example">
+                    <h3>Example: |0⟩</h3>
+                    <div class="formula">
+                        ρ = |0⟩⟨0| = [1, 0]<sup>T</sup>[1, 0] = [[1, 0], [0, 0]]
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Partial Trace Calculation</h2>
+                <p>For a two-qubit density matrix ρ<sub>AB</sub>, the partial trace over B is:</p>
+                
+                <div class="formula">
+                    ρ<sub>A</sub> = Tr<sub>B</sub>(ρ<sub>AB</sub>) = Σ<sub>j</sub> (I<sub>A</sub> ⊗ ⟨j|<sub>B</sub>) ρ<sub>AB</sub> (I<sub>A</sub> ⊗ |j⟩<sub>B</sub>)
+                </div>
+                
+                <p>In practice, we sum over the diagonal blocks corresponding to subsystem B.</p>
+            </div>
+
+            <div class="section">
+                <h2>Product State Example</h2>
+                <p>For a product state |ψ⟩ = |0⟩<sub>A</sub> ⊗ |0⟩<sub>B</sub>:</p>
+                
+                <div class="formula">
+                    ρ<sub>AB</sub> = |00⟩⟨00|
+                </div>
+                
+                <p>The partial trace gives:</p>
+                <div class="formula">
+                    ρ<sub>A</sub> = Tr<sub>B</sub>(|00⟩⟨00|) = |0⟩⟨0|
+                </div>
+                
+                <div class="key-point">
+                    <strong>Result:</strong> The reduced state is <strong>pure</strong> - qubit A is in a definite state |0⟩.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Entangled State Example</h2>
+                <p>For the Bell state |Φ<sup>+</sup>⟩ = (|00⟩ + |11⟩)/√2:</p>
+                
+                <div class="formula">
+                    ρ<sub>AB</sub> = |Φ<sup>+</sup>⟩⟨Φ<sup>+</sup>|
+                </div>
+                
+                <p>The partial trace gives:</p>
+                <div class="formula">
+                    ρ<sub>A</sub> = Tr<sub>B</sub>(ρ<sub>AB</sub>) = (|0⟩⟨0| + |1⟩⟨1|)/2 = I/2
+                </div>
+                
+                <div class="warning">
+                    <strong>Result:</strong> The reduced state is <strong>maximally mixed</strong> - qubit A alone appears completely random! This is a signature of entanglement.
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Entanglement Detection</h2>
+                <p>The partial trace provides a way to detect entanglement:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Joint State Type</th>
+                            <th>Reduced State ρ<sub>A</sub></th>
+                            <th>Purity Tr(ρ<sub>A</sub>²)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Product (Separable)</td>
+                            <td>Pure state</td>
+                            <td>= 1</td>
+                        </tr>
+                        <tr>
+                            <td>Entangled</td>
+                            <td>Mixed state</td>
+                            <td>< 1</td>
+                        </tr>
+                        <tr>
+                            <td>Maximally Entangled</td>
+                            <td>Maximally mixed (I/2)</td>
+                            <td>= 1/2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="key-point">
+                    <strong>Key Insight:</strong> If the reduced density matrix is mixed (not pure), the original state was entangled!
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Python Example: Partial Trace</h2>
+                
+                <div class="code-block">
+<pre>import numpy as np
+
+def partial_trace_B(rho_AB):
+    """Compute partial trace over subsystem B for a 2-qubit system."""
+    # rho_AB is 4x4, we want 2x2 result
+    rho_A = np.zeros((2, 2), dtype=complex)
+    
+    # Sum over B indices
+    for i in range(2):  # A index
+        for j in range(2):  # A index
+            for k in range(2):  # B index (traced over)
+                rho_A[i, j] += rho_AB[2*i + k, 2*j + k]
+    
+    return rho_A
+
+def purity(rho):
+    """Calculate purity Tr(ρ²)."""
+    return np.real(np.trace(rho @ rho))
+
+# Product state |00⟩
+ket_00 = np.array([1, 0, 0, 0])
+rho_product = np.outer(ket_00, ket_00)
+rho_A_product = partial_trace_B(rho_product)
+
+print("Product State |00⟩:")
+print(f"ρ_AB =\n{rho_product}")
+print(f"ρ_A = Tr_B(ρ_AB) =\n{rho_A_product}")
+print(f"Purity of ρ_A: {purity(rho_A_product):.4f} (Pure!)")
+
+# Bell state |Φ+⟩
+bell = np.array([1, 0, 0, 1]) / np.sqrt(2)
+rho_bell = np.outer(bell, bell)
+rho_A_bell = partial_trace_B(rho_bell)
+
+print("\n\nBell State |Φ+⟩:")
+print(f"ρ_AB =\n{np.round(rho_bell, 4)}")
+print(f"ρ_A = Tr_B(ρ_AB) =\n{np.round(rho_A_bell, 4)}")
+print(f"Purity of ρ_A: {purity(rho_A_bell):.4f} (Mixed - Entangled!)")
+print(f"ρ_A = I/2 (maximally mixed)")</pre>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Key Takeaways</h2>
+                <div class="key-point">
+                    <ul>
+                        <li>Partial trace describes subsystems of larger quantum systems</li>
+                        <li>It "traces out" degrees of freedom we don't have access to</li>
+                        <li>For product states, reduced states are pure</li>
+                        <li>For entangled states, reduced states are mixed</li>
+                        <li>Maximally entangled states give maximally mixed reduced states</li>
+                        <li>This is useful for analyzing entanglement and quantum information</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="../09-n-qubit-states/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../11-ghz-state/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let systemA, systemB, jointSystem;
+        let currentState = 'product';
+        
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 15);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            
+            createVisualization();
+            setupControls();
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00d4ff, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+        }
+        
+        function createVisualization() {
+            // Joint system (left)
+            jointSystem = createSystem(-5, 0, 0, 'Joint ρ_AB', 0xffd700, true);
+            
+            // Arrow showing partial trace
+            addLabel(0, 0, 0, "Tr_B →");
+            
+            // Reduced system A (right)
+            systemA = createSystem(5, 0, 0, 'Reduced ρ_A', 0x00d4ff, false);
+        }
+        
+        function createSystem(x, y, z, label, color, isJoint) {
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+            
+            if (isJoint) {
+                // Two connected spheres for joint system
+                const sphere1 = createSphere(-0.8, 0, 0, 0x00d4ff, 0.8);
+                const sphere2 = createSphere(0.8, 0, 0, 0xff6b9d, 0.8);
+                group.add(sphere1);
+                group.add(sphere2);
+                
+                // Connection line
+                const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffd700 });
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(-0.8, 0, 0),
+                    new THREE.Vector3(0.8, 0, 0)
+                ]);
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                group.add(line);
+                group.connectionLine = line;
+            } else {
+                // Single sphere for reduced system
+                const sphere = createSphere(0, 0, 0, color, 1);
+                group.add(sphere);
+                group.mainSphere = sphere;
+            }
+            
+            // Label
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, 128, 40);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const labelMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const labelSprite = new THREE.Sprite(labelMaterial);
+            labelSprite.position.set(0, -2, 0);
+            labelSprite.scale.set(3, 0.75, 1);
+            group.add(labelSprite);
+            
+            scene.add(group);
+            return group;
+        }
+        
+        function createSphere(x, y, z, color, radius) {
+            const geometry = new THREE.SphereGeometry(radius, 32, 32);
+            const material = new THREE.MeshPhongMaterial({
+                color: color,
+                emissive: color,
+                emissiveIntensity: 0.2,
+                transparent: true,
+                opacity: 0.8
+            });
+            const sphere = new THREE.Mesh(geometry, material);
+            sphere.position.set(x, y, z);
+            return sphere;
+        }
+        
+        function addLabel(x, y, z, text) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, 128, 45);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.position.set(x, y, z);
+            sprite.scale.set(4, 1, 1);
+            scene.add(sprite);
+        }
+        
+        function setupControls() {
+            const stateSelect = document.getElementById('state-select');
+            const reducedState = document.getElementById('reduced-state');
+            
+            stateSelect.addEventListener('change', (e) => {
+                currentState = e.target.value;
+                if (currentState === 'product') {
+                    reducedState.innerHTML = 'ρ<sub>A</sub> = |0⟩⟨0| (Pure state, Purity = 1)';
+                } else {
+                    reducedState.innerHTML = 'ρ<sub>A</sub> = I/2 (Maximally mixed, Purity = 0.5)';
+                }
+            });
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            
+            // Animate based on state type
+            if (currentState === 'bell') {
+                // Entangled: correlated motion, mixed reduced state
+                jointSystem.children[0].position.y = Math.sin(time) * 0.3;
+                jointSystem.children[1].position.y = Math.sin(time) * 0.3;
+                
+                // Reduced state appears "fuzzy" (pulsing)
+                if (systemA.mainSphere) {
+                    systemA.mainSphere.material.opacity = 0.4 + Math.sin(time * 3) * 0.2;
+                }
+            } else {
+                // Product: independent motion, pure reduced state
+                jointSystem.children[0].position.y = Math.sin(time) * 0.3;
+                jointSystem.children[1].position.y = Math.sin(time + 2) * 0.3;
+                
+                // Reduced state is solid (pure)
+                if (systemA.mainSphere) {
+                    systemA.mainSphere.material.opacity = 0.9;
+                }
+            }
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

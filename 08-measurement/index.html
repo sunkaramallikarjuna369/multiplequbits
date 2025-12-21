@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Measurement - Multiple-Qubit States</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concept 8: Measurement in Multi-Qubit Systems</h1>
+            <p class="subtitle">Probabilities, Collapse, and Correlations</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <a href="../07-generating-entanglement/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../09-n-qubit-states/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+
+        <div class="section full-width">
+            <h2>Interactive Measurement Simulation</h2>
+            <div id="canvas-container"></div>
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label>State to Measure:</label>
+                    <select id="state-select" style="padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.5); color: white; border: 1px solid #00d4ff; width: 100%;">
+                        <option value="bell">Bell State |Φ+⟩ = (|00⟩ + |11⟩)/√2</option>
+                        <option value="product">Product State (|00⟩ + |10⟩)/√2</option>
+                        <option value="uniform">Uniform Superposition (|00⟩+|01⟩+|10⟩+|11⟩)/2</option>
+                    </select>
+                </div>
+                <button id="measure-btn" style="padding: 15px 30px; background: #00d4ff; border: none; border-radius: 8px; color: #000; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%;">MEASURE!</button>
+                <div class="state-info" style="margin-top: 15px;">
+                    <h4>Measurement Result</h4>
+                    <p id="result-display">Click MEASURE to collapse the state</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="section">
+                <h2>Measurement Probabilities</h2>
+                <p>For a 2-qubit state:</p>
+                <div class="formula">
+                    |ψ⟩ = Σ<sub>i,j</sub> α<sub>ij</sub>|ij⟩
+                </div>
+                
+                <p>The probability of measuring outcome |ij⟩ is:</p>
+                <div class="formula">
+                    P(ij) = |α<sub>ij</sub>|<sup>2</sup>
+                </div>
+                
+                <div class="example">
+                    <h3>Example: Bell State</h3>
+                    <div class="formula">
+                        |Φ<sup>+</sup>⟩ = (|00⟩ + |11⟩)/√2
+                    </div>
+                    <p>Probabilities:</p>
+                    <ul>
+                        <li>P(00) = |1/√2|² = 1/2</li>
+                        <li>P(01) = 0</li>
+                        <li>P(10) = 0</li>
+                        <li>P(11) = |1/√2|² = 1/2</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>State Collapse</h2>
+                <p>When we measure a quantum state, it <span class="highlight">collapses</span> to one of the basis states:</p>
+                
+                <div class="key-point">
+                    <strong>Before measurement:</strong> State exists in superposition<br>
+                    <strong>After measurement:</strong> State collapses to a definite outcome
+                </div>
+                
+                <p>For the Bell state |Φ<sup>+</sup>⟩:</p>
+                <ul>
+                    <li>50% chance: collapse to |00⟩</li>
+                    <li>50% chance: collapse to |11⟩</li>
+                    <li>0% chance: |01⟩ or |10⟩</li>
+                </ul>
+            </div>
+
+            <div class="section full-width">
+                <h2>Measuring One Qubit of an Entangled Pair</h2>
+                <p>When one qubit of an entangled pair is measured, the other qubit's state is instantly determined:</p>
+                
+                <div class="example">
+                    <h3>Bell State Measurement</h3>
+                    <p>Starting with |Φ<sup>+</sup>⟩ = (|00⟩ + |11⟩)/√2:</p>
+                    <ul>
+                        <li>If qubit 1 measures |0⟩ → qubit 2 <strong>must be</strong> |0⟩</li>
+                        <li>If qubit 1 measures |1⟩ → qubit 2 <strong>must be</strong> |1⟩</li>
+                    </ul>
+                    <p>This correlation exists regardless of the distance between the qubits!</p>
+                </div>
+                
+                <div class="warning">
+                    <strong>No Faster-Than-Light Communication:</strong> Although the correlation is instant, it cannot be used to send information faster than light because the measurement outcome is random.
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Probability Distribution Visualization</h2>
+                <div id="probability-bars">
+                    <div style="margin-bottom: 10px;">
+                        <span style="display: inline-block; width: 60px;">|00⟩:</span>
+                        <div class="probability-bar" style="display: inline-block; width: calc(100% - 120px); vertical-align: middle;">
+                            <div class="probability-fill" id="prob-00" style="width: 50%;"></div>
+                        </div>
+                        <span id="prob-00-label" style="margin-left: 10px;">50%</span>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span style="display: inline-block; width: 60px;">|01⟩:</span>
+                        <div class="probability-bar" style="display: inline-block; width: calc(100% - 120px); vertical-align: middle;">
+                            <div class="probability-fill" id="prob-01" style="width: 0%;"></div>
+                        </div>
+                        <span id="prob-01-label" style="margin-left: 10px;">0%</span>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span style="display: inline-block; width: 60px;">|10⟩:</span>
+                        <div class="probability-bar" style="display: inline-block; width: calc(100% - 120px); vertical-align: middle;">
+                            <div class="probability-fill" id="prob-10" style="width: 0%;"></div>
+                        </div>
+                        <span id="prob-10-label" style="margin-left: 10px;">0%</span>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span style="display: inline-block; width: 60px;">|11⟩:</span>
+                        <div class="probability-bar" style="display: inline-block; width: calc(100% - 120px); vertical-align: middle;">
+                            <div class="probability-fill" id="prob-11" style="width: 50%;"></div>
+                        </div>
+                        <span id="prob-11-label" style="margin-left: 10px;">50%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Python Example: Measurement Simulation</h2>
+                
+                <div class="code-block">
+<pre>import numpy as np
+
+def measure_state(state, num_measurements=1000):
+    """Simulate measurements of a quantum state."""
+    probabilities = np.abs(state)**2
+    outcomes = np.random.choice(len(state), size=num_measurements, p=probabilities)
+    
+    # Count outcomes
+    counts = {}
+    labels = ['00', '01', '10', '11']
+    for i, label in enumerate(labels):
+        counts[label] = np.sum(outcomes == i)
+    
+    return counts
+
+# Bell state |Φ+⟩
+bell_state = np.array([1/np.sqrt(2), 0, 0, 1/np.sqrt(2)])
+
+print("Bell State |Φ+⟩ = (|00⟩ + |11⟩)/√2")
+print(f"Theoretical probabilities: P(00)=0.5, P(01)=0, P(10)=0, P(11)=0.5")
+
+counts = measure_state(bell_state, 10000)
+print(f"\nSimulated measurements (10000 trials):")
+for outcome, count in counts.items():
+    print(f"  |{outcome}⟩: {count} ({count/100:.1f}%)")
+
+# Product state
+product_state = np.array([1/np.sqrt(2), 0, 1/np.sqrt(2), 0])
+print("\n\nProduct State (|00⟩ + |10⟩)/√2")
+counts = measure_state(product_state, 10000)
+print(f"Simulated measurements (10000 trials):")
+for outcome, count in counts.items():
+    print(f"  |{outcome}⟩: {count} ({count/100:.1f}%)")</pre>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Key Takeaways</h2>
+                <div class="key-point">
+                    <ul>
+                        <li>Measurement probability is |amplitude|² for each basis state</li>
+                        <li>Measurement causes the state to collapse to a definite outcome</li>
+                        <li>For entangled states, measuring one qubit determines the other</li>
+                        <li>Correlations in entangled states are stronger than any classical correlation</li>
+                        <li>Despite instant correlations, no information travels faster than light</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="../07-generating-entanglement/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../09-n-qubit-states/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let qubit1, qubit2, entanglementLine;
+        let currentState = 'bell';
+        let measured = false;
+        
+        const states = {
+            bell: { probs: [0.5, 0, 0, 0.5], name: 'Bell State |Φ+⟩' },
+            product: { probs: [0.5, 0, 0.5, 0], name: 'Product State' },
+            uniform: { probs: [0.25, 0.25, 0.25, 0.25], name: 'Uniform Superposition' }
+        };
+        
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 12);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            
+            createVisualization();
+            setupControls();
+            updateProbabilityBars();
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00d4ff, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+        }
+        
+        function createVisualization() {
+            qubit1 = createBlochSphere(-3, 0, 0, 0x00d4ff, "Qubit 1");
+            qubit2 = createBlochSphere(3, 0, 0, 0xff6b9d, "Qubit 2");
+            
+            const curve = new THREE.QuadraticBezierCurve3(
+                new THREE.Vector3(-3, 0, 0),
+                new THREE.Vector3(0, 2, 0),
+                new THREE.Vector3(3, 0, 0)
+            );
+            const points = curve.getPoints(50);
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.8 });
+            entanglementLine = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(entanglementLine);
+        }
+        
+        function createBlochSphere(x, y, z, color, label) {
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+            
+            const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+            const sphereMaterial = new THREE.MeshBasicMaterial({
+                color: color,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            group.add(sphere);
+            
+            const arrowGroup = new THREE.Group();
+            const shaftGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1.2, 16);
+            const shaftMaterial = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.3 });
+            const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
+            shaft.position.y = 0.6;
+            arrowGroup.add(shaft);
+            
+            const coneGeometry = new THREE.ConeGeometry(0.15, 0.3, 16);
+            const cone = new THREE.Mesh(coneGeometry, shaftMaterial);
+            cone.position.y = 1.35;
+            arrowGroup.add(cone);
+            
+            group.add(arrowGroup);
+            group.arrow = arrowGroup;
+            
+            addLabel(x, y - 2.5, z, label);
+            
+            scene.add(group);
+            return group;
+        }
+        
+        function addLabel(x, y, z, text) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, 128, 40);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.position.set(x, y, z);
+            sprite.scale.set(2, 0.5, 1);
+            scene.add(sprite);
+        }
+        
+        function setupControls() {
+            const stateSelect = document.getElementById('state-select');
+            const measureBtn = document.getElementById('measure-btn');
+            const resultDisplay = document.getElementById('result-display');
+            
+            stateSelect.addEventListener('change', (e) => {
+                currentState = e.target.value;
+                measured = false;
+                resultDisplay.textContent = 'Click MEASURE to collapse the state';
+                updateProbabilityBars();
+                entanglementLine.material.opacity = currentState === 'bell' ? 0.8 : 0.2;
+            });
+            
+            measureBtn.addEventListener('click', () => {
+                const probs = states[currentState].probs;
+                const rand = Math.random();
+                let cumulative = 0;
+                let outcome = 0;
+                
+                for (let i = 0; i < probs.length; i++) {
+                    cumulative += probs[i];
+                    if (rand < cumulative) {
+                        outcome = i;
+                        break;
+                    }
+                }
+                
+                const labels = ['00', '01', '10', '11'];
+                resultDisplay.innerHTML = `<strong style="color: #ffd700; font-size: 1.5em;">|${labels[outcome]}⟩</strong><br>State collapsed!`;
+                measured = true;
+                
+                // Update qubit visualization
+                const bit1 = labels[outcome][0];
+                const bit2 = labels[outcome][1];
+                qubit1.arrow.rotation.x = bit1 === '0' ? 0 : Math.PI;
+                qubit2.arrow.rotation.x = bit2 === '0' ? 0 : Math.PI;
+            });
+        }
+        
+        function updateProbabilityBars() {
+            const probs = states[currentState].probs;
+            const labels = ['00', '01', '10', '11'];
+            
+            labels.forEach((label, i) => {
+                document.getElementById(`prob-${label}`).style.width = `${probs[i] * 100}%`;
+                document.getElementById(`prob-${label}-label`).textContent = `${(probs[i] * 100).toFixed(0)}%`;
+            });
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            
+            if (!measured) {
+                // Superposition animation
+                qubit1.arrow.rotation.x = Math.sin(time) * 0.5;
+                qubit1.arrow.rotation.z = Math.cos(time * 0.7) * 0.3;
+                
+                if (currentState === 'bell') {
+                    qubit2.arrow.rotation.x = Math.sin(time) * 0.5;
+                    qubit2.arrow.rotation.z = Math.cos(time * 0.7) * 0.3;
+                } else {
+                    qubit2.arrow.rotation.x = Math.sin(time + 2) * 0.5;
+                    qubit2.arrow.rotation.z = Math.cos(time * 0.7 + 1) * 0.3;
+                }
+                
+                entanglementLine.material.opacity = currentState === 'bell' ? 0.5 + Math.sin(time * 3) * 0.3 : 0.2;
+            }
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

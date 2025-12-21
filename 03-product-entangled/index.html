@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product vs Entangled States - Multiple-Qubit States</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concept 3: Product vs Entangled States</h1>
+            <p class="subtitle">Understanding Separability and Quantum Correlations</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <a href="../02-tensor-product/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../04-bell-states/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+
+        <div class="section full-width">
+            <h2>Interactive Visualization: Product vs Entangled States</h2>
+            <div id="canvas-container"></div>
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label>State Type: <span class="value-display" id="state-type">Product State</span></label>
+                    <input type="range" class="slider" id="entanglement-slider" min="0" max="100" value="0">
+                </div>
+                <div class="state-info">
+                    <p id="state-display">|ψ⟩ = |0⟩ ⊗ |0⟩ = |00⟩ (Separable)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="section">
+                <h2>Product States (Separable)</h2>
+                <p>A <span class="highlight">product state</span> can be written as a tensor product of single-qubit states:</p>
+                
+                <div class="formula">
+                    |ψ⟩ = |ψ<sub>1</sub>⟩ ⊗ |ψ<sub>2</sub>⟩
+                </div>
+                
+                <div class="example">
+                    <h3>Example: Product State</h3>
+                    <div class="formula">
+                        (|0⟩ + |1⟩)/√2 ⊗ |0⟩ = (|00⟩ + |10⟩)/√2
+                    </div>
+                    <p>This state is separable: the first qubit is in |+⟩ and the second qubit is in |0⟩. They are independent!</p>
+                </div>
+                
+                <div class="key-point">
+                    <strong>Key Property:</strong> In a product state, measuring one qubit tells you nothing about the other. The qubits are statistically independent.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Entangled States</h2>
+                <p>An <span class="highlight">entangled state</span> cannot be written as a tensor product of single-qubit states:</p>
+                
+                <div class="formula">
+                    |ψ⟩ ≠ |ψ<sub>1</sub>⟩ ⊗ |ψ<sub>2</sub>⟩ for any |ψ<sub>1</sub>⟩, |ψ<sub>2</sub>⟩
+                </div>
+                
+                <div class="example">
+                    <h3>Example: Bell State (Entangled)</h3>
+                    <div class="formula">
+                        |Φ<sup>+</sup>⟩ = (|00⟩ + |11⟩)/√2
+                    </div>
+                    <p>There are NO single-qubit states |ψ<sub>1</sub>⟩, |ψ<sub>2</sub>⟩ such that |Φ<sup>+</sup>⟩ = |ψ<sub>1</sub>⟩ ⊗ |ψ<sub>2</sub>⟩</p>
+                </div>
+                
+                <div class="warning">
+                    <strong>Quantum Correlations:</strong> Entanglement creates correlations that have NO classical counterpart!
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Why Can't Bell States Be Factored?</h2>
+                <p>Let's prove that |Φ<sup>+</sup>⟩ = (|00⟩ + |11⟩)/√2 cannot be written as |ψ<sub>1</sub>⟩ ⊗ |ψ<sub>2</sub>⟩:</p>
+                
+                <div class="example">
+                    <p>Assume |ψ<sub>1</sub>⟩ = α|0⟩ + β|1⟩ and |ψ<sub>2</sub>⟩ = γ|0⟩ + δ|1⟩</p>
+                    <p>Then:</p>
+                    <div class="formula">
+                        |ψ<sub>1</sub>⟩ ⊗ |ψ<sub>2</sub>⟩ = αγ|00⟩ + αδ|01⟩ + βγ|10⟩ + βδ|11⟩
+                    </div>
+                    <p>For this to equal |Φ<sup>+</sup>⟩, we need:</p>
+                    <ul>
+                        <li>αγ = 1/√2 (coefficient of |00⟩)</li>
+                        <li>αδ = 0 (coefficient of |01⟩)</li>
+                        <li>βγ = 0 (coefficient of |10⟩)</li>
+                        <li>βδ = 1/√2 (coefficient of |11⟩)</li>
+                    </ul>
+                    <p>From αδ = 0: either α = 0 or δ = 0</p>
+                    <p>From βγ = 0: either β = 0 or γ = 0</p>
+                    <p>But if α = 0, then αγ ≠ 1/√2. If δ = 0, then βδ ≠ 1/√2.</p>
+                    <p><strong>Contradiction!</strong> Therefore, |Φ<sup>+</sup>⟩ cannot be factored.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Physical Meaning of Entanglement</h2>
+                <p>In the Bell state |Φ<sup>+</sup>⟩ = (|00⟩ + |11⟩)/√2:</p>
+                
+                <ul>
+                    <li>If you measure the first qubit and get |0⟩, the second qubit <strong>instantly</strong> becomes |0⟩</li>
+                    <li>If you measure the first qubit and get |1⟩, the second qubit <strong>instantly</strong> becomes |1⟩</li>
+                    <li>This happens regardless of the distance between the qubits!</li>
+                </ul>
+                
+                <div class="key-point">
+                    <strong>Einstein's "Spooky Action":</strong> Einstein called this "spooky action at a distance." However, it cannot be used to send information faster than light.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Detecting Entanglement</h2>
+                <p>How do we know if a state is entangled?</p>
+                
+                <h3>Method 1: Try to Factor</h3>
+                <p>Attempt to write the state as a product. If you can't, it's entangled.</p>
+                
+                <h3>Method 2: Schmidt Decomposition</h3>
+                <p>A state is entangled if and only if it has more than one term in its Schmidt decomposition.</p>
+                
+                <h3>Method 3: Reduced Density Matrix</h3>
+                <p>Trace out one qubit. If the resulting density matrix is mixed (not pure), the original state was entangled.</p>
+            </div>
+
+            <div class="section full-width">
+                <h2>Python Example: Testing Separability</h2>
+                
+                <div class="code-block">
+<pre>import numpy as np
+
+def is_separable_2qubit(state):
+    """
+    Check if a 2-qubit state is separable by attempting factorization.
+    Returns True if separable, False if entangled.
+    """
+    # Reshape state vector into 2x2 matrix
+    matrix = state.reshape(2, 2)
+    
+    # Compute singular value decomposition
+    U, S, Vh = np.linalg.svd(matrix)
+    
+    # Count non-zero singular values (with tolerance)
+    rank = np.sum(S > 1e-10)
+    
+    # Separable iff rank = 1
+    return rank == 1
+
+# Product state: |+⟩ ⊗ |0⟩ = (|00⟩ + |10⟩)/√2
+product_state = np.array([1/np.sqrt(2), 0, 1/np.sqrt(2), 0])
+print(f"Product state (|+⟩⊗|0⟩): separable = {is_separable_2qubit(product_state)}")
+
+# Bell state: (|00⟩ + |11⟩)/√2
+bell_state = np.array([1/np.sqrt(2), 0, 0, 1/np.sqrt(2)])
+print(f"Bell state |Φ+⟩: separable = {is_separable_2qubit(bell_state)}")
+
+# Another product state: |0⟩ ⊗ |1⟩ = |01⟩
+product_01 = np.array([0, 1, 0, 0])
+print(f"Product state |01⟩: separable = {is_separable_2qubit(product_01)}")
+
+# Entangled state: (|01⟩ + |10⟩)/√2
+psi_plus = np.array([0, 1/np.sqrt(2), 1/np.sqrt(2), 0])
+print(f"Bell state |Ψ+⟩: separable = {is_separable_2qubit(psi_plus)}")</pre>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Key Takeaways</h2>
+                <div class="key-point">
+                    <ul>
+                        <li><strong>Product states</strong> can be factored into tensor products of single-qubit states</li>
+                        <li><strong>Entangled states</strong> cannot be factored - the qubits are fundamentally correlated</li>
+                        <li>Entanglement is a uniquely quantum phenomenon with no classical analog</li>
+                        <li>Measuring one qubit of an entangled pair instantly affects the other</li>
+                        <li>Entanglement is a key resource for quantum computing and communication</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="../02-tensor-product/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../04-bell-states/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let qubit1, qubit2;
+        let entanglementLine;
+        let entanglementLevel = 0;
+        
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 12);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            
+            createVisualization();
+            setupControls();
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00d4ff, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+        }
+        
+        function createVisualization() {
+            // Create two Bloch spheres
+            qubit1 = createBlochSphere(-3, 0, 0, 0x00d4ff);
+            qubit2 = createBlochSphere(3, 0, 0, 0xff6b9d);
+            
+            // Entanglement connection line
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xffd700,
+                transparent: true,
+                opacity: 0
+            });
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-3, 0, 0),
+                new THREE.Vector3(3, 0, 0)
+            ]);
+            entanglementLine = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(entanglementLine);
+            
+            // Labels
+            addLabel(-3, -2.5, 0, "Qubit 1");
+            addLabel(3, -2.5, 0, "Qubit 2");
+        }
+        
+        function createBlochSphere(x, y, z, color) {
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+            
+            // Sphere
+            const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+            const sphereMaterial = new THREE.MeshBasicMaterial({
+                color: color,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            group.add(sphere);
+            
+            // State vector
+            const arrowGroup = new THREE.Group();
+            const shaftGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1.2, 16);
+            const shaftMaterial = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.3 });
+            const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
+            shaft.position.y = 0.6;
+            arrowGroup.add(shaft);
+            
+            const coneGeometry = new THREE.ConeGeometry(0.15, 0.3, 16);
+            const cone = new THREE.Mesh(coneGeometry, shaftMaterial);
+            cone.position.y = 1.35;
+            arrowGroup.add(cone);
+            
+            group.add(arrowGroup);
+            group.arrow = arrowGroup;
+            
+            scene.add(group);
+            return group;
+        }
+        
+        function addLabel(x, y, z, text) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, 128, 40);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.position.set(x, y, z);
+            sprite.scale.set(3, 0.75, 1);
+            scene.add(sprite);
+        }
+        
+        function setupControls() {
+            const slider = document.getElementById('entanglement-slider');
+            const stateType = document.getElementById('state-type');
+            const stateDisplay = document.getElementById('state-display');
+            
+            slider.addEventListener('input', (e) => {
+                entanglementLevel = e.target.value / 100;
+                
+                if (entanglementLevel < 0.5) {
+                    stateType.textContent = "Product State";
+                    stateDisplay.textContent = "|ψ⟩ = |+⟩ ⊗ |0⟩ = (|00⟩ + |10⟩)/√2 (Separable)";
+                } else {
+                    stateType.textContent = "Entangled State";
+                    stateDisplay.textContent = "|ψ⟩ = (|00⟩ + |11⟩)/√2 = |Φ+⟩ (Bell State)";
+                }
+                
+                // Update entanglement line opacity
+                entanglementLine.material.opacity = entanglementLevel;
+            });
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            
+            // Animate state vectors
+            if (entanglementLevel < 0.5) {
+                // Product state: independent motion
+                qubit1.arrow.rotation.x = Math.sin(time) * 0.5;
+                qubit1.arrow.rotation.z = Math.cos(time * 0.7) * 0.3;
+                qubit2.arrow.rotation.x = Math.sin(time * 1.3 + 2) * 0.5;
+                qubit2.arrow.rotation.z = Math.cos(time * 0.9 + 1) * 0.3;
+            } else {
+                // Entangled state: correlated motion
+                const angle = Math.sin(time) * 0.5;
+                qubit1.arrow.rotation.x = angle;
+                qubit1.arrow.rotation.z = Math.cos(time * 0.7) * 0.3;
+                qubit2.arrow.rotation.x = angle; // Same as qubit1!
+                qubit2.arrow.rotation.z = Math.cos(time * 0.7) * 0.3; // Same as qubit1!
+            }
+            
+            // Pulse entanglement line
+            if (entanglementLevel > 0) {
+                entanglementLine.material.opacity = entanglementLevel * (0.5 + Math.sin(time * 3) * 0.3);
+            }
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
