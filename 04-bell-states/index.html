@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bell States - Multiple-Qubit States</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concept 4: Bell States</h1>
+            <p class="subtitle">The Four Maximally Entangled Two-Qubit States</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <a href="../03-product-entangled/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../05-dimension-growth/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+
+        <div class="section full-width">
+            <h2>Interactive Bell States Visualization</h2>
+            <div id="canvas-container"></div>
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label>Select Bell State:</label>
+                    <select id="bell-state-select" style="padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.5); color: white; border: 1px solid #00d4ff; width: 100%;">
+                        <option value="phi_plus">|Φ+⟩ = (|00⟩ + |11⟩)/√2</option>
+                        <option value="phi_minus">|Φ-⟩ = (|00⟩ - |11⟩)/√2</option>
+                        <option value="psi_plus">|Ψ+⟩ = (|01⟩ + |10⟩)/√2</option>
+                        <option value="psi_minus">|Ψ-⟩ = (|01⟩ - |10⟩)/√2</option>
+                    </select>
+                </div>
+                <div class="state-info">
+                    <h4 id="bell-name">|Φ+⟩ - Correlated Bits</h4>
+                    <p id="bell-description">Both qubits always measure the same: both |0⟩ or both |1⟩</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="section full-width">
+                <h2>The Four Bell States</h2>
+                <p>There are four orthonormal Bell states that form a complete basis for the two-qubit Hilbert space:</p>
+                
+                <div class="bell-states">
+                    <div class="bell-state-card">
+                        <h4>|Φ<sup>+</sup>⟩</h4>
+                        <div class="formula">(|00⟩ + |11⟩)/√2</div>
+                        <p><strong>Correlated bits</strong> - Same outcome for both qubits</p>
+                        <p>P(00) = P(11) = 1/2</p>
+                    </div>
+                    
+                    <div class="bell-state-card">
+                        <h4>|Φ<sup>-</sup>⟩</h4>
+                        <div class="formula">(|00⟩ - |11⟩)/√2</div>
+                        <p><strong>Correlated with phase flip</strong></p>
+                        <p>P(00) = P(11) = 1/2</p>
+                    </div>
+                    
+                    <div class="bell-state-card">
+                        <h4>|Ψ<sup>+</sup>⟩</h4>
+                        <div class="formula">(|01⟩ + |10⟩)/√2</div>
+                        <p><strong>Anti-correlated bits</strong> - Opposite outcomes</p>
+                        <p>P(01) = P(10) = 1/2</p>
+                    </div>
+                    
+                    <div class="bell-state-card">
+                        <h4>|Ψ<sup>-</sup>⟩</h4>
+                        <div class="formula">(|01⟩ - |10⟩)/√2</div>
+                        <p><strong>Anti-correlated with phase flip</strong></p>
+                        <p>P(01) = P(10) = 1/2</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Properties of Bell States</h2>
+                
+                <h3>Orthonormality</h3>
+                <p>The four Bell states are mutually orthogonal and normalized:</p>
+                <div class="formula">
+                    ⟨Φ<sup>+</sup>|Φ<sup>+</sup>⟩ = 1<br>
+                    ⟨Φ<sup>+</sup>|Φ<sup>-</sup>⟩ = 0<br>
+                    etc.
+                </div>
+                
+                <h3>Completeness</h3>
+                <p>Any two-qubit state can be expressed as a linear combination of Bell states.</p>
+                
+                <h3>Maximal Entanglement</h3>
+                <p>Bell states are <span class="highlight">maximally entangled</span> - they have the maximum possible quantum correlations.</p>
+            </div>
+
+            <div class="section">
+                <h2>Vector Representations</h2>
+                
+                <div class="basis-states">
+                    <div class="basis-state-card">
+                        <h4>|Φ<sup>+</sup>⟩</h4>
+                        <div class="formula">[1/√2, 0, 0, 1/√2]<sup>T</sup></div>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>|Φ<sup>-</sup>⟩</h4>
+                        <div class="formula">[1/√2, 0, 0, -1/√2]<sup>T</sup></div>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>|Ψ<sup>+</sup>⟩</h4>
+                        <div class="formula">[0, 1/√2, 1/√2, 0]<sup>T</sup></div>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>|Ψ<sup>-</sup>⟩</h4>
+                        <div class="formula">[0, 1/√2, -1/√2, 0]<sup>T</sup></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Measurement Correlations</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bell State</th>
+                            <th>P(00)</th>
+                            <th>P(01)</th>
+                            <th>P(10)</th>
+                            <th>P(11)</th>
+                            <th>Correlation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>|Φ<sup>+</sup>⟩</td>
+                            <td>1/2</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>1/2</td>
+                            <td>Same bits</td>
+                        </tr>
+                        <tr>
+                            <td>|Φ<sup>-</sup>⟩</td>
+                            <td>1/2</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>1/2</td>
+                            <td>Same bits</td>
+                        </tr>
+                        <tr>
+                            <td>|Ψ<sup>+</sup>⟩</td>
+                            <td>0</td>
+                            <td>1/2</td>
+                            <td>1/2</td>
+                            <td>0</td>
+                            <td>Opposite bits</td>
+                        </tr>
+                        <tr>
+                            <td>|Ψ<sup>-</sup>⟩</td>
+                            <td>0</td>
+                            <td>1/2</td>
+                            <td>1/2</td>
+                            <td>0</td>
+                            <td>Opposite bits</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section full-width">
+                <h2>Applications of Bell States</h2>
+                
+                <div class="basis-states">
+                    <div class="basis-state-card">
+                        <h4>Quantum Teleportation</h4>
+                        <p>Transfer quantum states using entanglement and classical communication</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>Superdense Coding</h4>
+                        <p>Send 2 classical bits using 1 qubit and shared entanglement</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>Quantum Key Distribution</h4>
+                        <p>Secure communication using entangled pairs (E91 protocol)</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>Bell Test Experiments</h4>
+                        <p>Verify quantum mechanics and rule out local hidden variables</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Python Example: Bell States</h2>
+                
+                <div class="code-block">
+<pre>import numpy as np
+
+# Define computational basis
+ket_00 = np.array([1, 0, 0, 0])
+ket_01 = np.array([0, 1, 0, 0])
+ket_10 = np.array([0, 0, 1, 0])
+ket_11 = np.array([0, 0, 0, 1])
+
+# Bell states
+phi_plus = (ket_00 + ket_11) / np.sqrt(2)
+phi_minus = (ket_00 - ket_11) / np.sqrt(2)
+psi_plus = (ket_01 + ket_10) / np.sqrt(2)
+psi_minus = (ket_01 - ket_10) / np.sqrt(2)
+
+print("Bell States:")
+print(f"|Φ+⟩ = {phi_plus}")
+print(f"|Φ-⟩ = {phi_minus}")
+print(f"|Ψ+⟩ = {psi_plus}")
+print(f"|Ψ-⟩ = {psi_minus}")
+
+# Verify orthonormality
+print("\nOrthonormality check:")
+print(f"⟨Φ+|Φ+⟩ = {np.dot(phi_plus, phi_plus):.4f}")
+print(f"⟨Φ+|Φ-⟩ = {np.dot(phi_plus, phi_minus):.4f}")
+print(f"⟨Φ+|Ψ+⟩ = {np.dot(phi_plus, psi_plus):.4f}")
+print(f"⟨Ψ+|Ψ-⟩ = {np.dot(psi_plus, psi_minus):.4f}")
+
+# Measurement probabilities for |Φ+⟩
+print("\nMeasurement probabilities for |Φ+⟩:")
+probs = np.abs(phi_plus)**2
+print(f"P(00) = {probs[0]:.4f}")
+print(f"P(01) = {probs[1]:.4f}")
+print(f"P(10) = {probs[2]:.4f}")
+print(f"P(11) = {probs[3]:.4f}")</pre>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Key Takeaways</h2>
+                <div class="key-point">
+                    <ul>
+                        <li>Four Bell states form an orthonormal basis for two-qubit space</li>
+                        <li>|Φ<sup>±</sup>⟩ states have correlated outcomes (same bits)</li>
+                        <li>|Ψ<sup>±</sup>⟩ states have anti-correlated outcomes (opposite bits)</li>
+                        <li>Bell states are maximally entangled</li>
+                        <li>They are fundamental resources for quantum information protocols</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="../03-product-entangled/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../05-dimension-growth/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let qubit1, qubit2, entanglementLine;
+        let currentBellState = 'phi_plus';
+        
+        const bellStateInfo = {
+            phi_plus: { name: '|Φ+⟩ - Correlated Bits', desc: 'Both qubits always measure the same: both |0⟩ or both |1⟩', correlated: true, phase: 1 },
+            phi_minus: { name: '|Φ-⟩ - Correlated with Phase', desc: 'Same outcomes but with relative phase of -1', correlated: true, phase: -1 },
+            psi_plus: { name: '|Ψ+⟩ - Anti-correlated Bits', desc: 'Qubits always measure opposite: |01⟩ or |10⟩', correlated: false, phase: 1 },
+            psi_minus: { name: '|Ψ-⟩ - Singlet State', desc: 'Anti-correlated with phase flip - the famous singlet state', correlated: false, phase: -1 }
+        };
+        
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 12);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            
+            createVisualization();
+            setupControls();
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00d4ff, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+        }
+        
+        function createVisualization() {
+            qubit1 = createBlochSphere(-3, 0, 0, 0x00d4ff);
+            qubit2 = createBlochSphere(3, 0, 0, 0xff6b9d);
+            
+            // Entanglement visualization
+            const curve = new THREE.QuadraticBezierCurve3(
+                new THREE.Vector3(-3, 0, 0),
+                new THREE.Vector3(0, 2, 0),
+                new THREE.Vector3(3, 0, 0)
+            );
+            const points = curve.getPoints(50);
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.8 });
+            entanglementLine = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(entanglementLine);
+            
+            addLabel(-3, -2.5, 0, "Qubit 1");
+            addLabel(3, -2.5, 0, "Qubit 2");
+        }
+        
+        function createBlochSphere(x, y, z, color) {
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+            
+            const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+            const sphereMaterial = new THREE.MeshBasicMaterial({
+                color: color,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            group.add(sphere);
+            
+            const arrowGroup = new THREE.Group();
+            const shaftGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1.2, 16);
+            const shaftMaterial = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.3 });
+            const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
+            shaft.position.y = 0.6;
+            arrowGroup.add(shaft);
+            
+            const coneGeometry = new THREE.ConeGeometry(0.15, 0.3, 16);
+            const cone = new THREE.Mesh(coneGeometry, shaftMaterial);
+            cone.position.y = 1.35;
+            arrowGroup.add(cone);
+            
+            group.add(arrowGroup);
+            group.arrow = arrowGroup;
+            
+            scene.add(group);
+            return group;
+        }
+        
+        function addLabel(x, y, z, text) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, 128, 40);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.position.set(x, y, z);
+            sprite.scale.set(3, 0.75, 1);
+            scene.add(sprite);
+        }
+        
+        function setupControls() {
+            const select = document.getElementById('bell-state-select');
+            const bellName = document.getElementById('bell-name');
+            const bellDesc = document.getElementById('bell-description');
+            
+            select.addEventListener('change', (e) => {
+                currentBellState = e.target.value;
+                const info = bellStateInfo[currentBellState];
+                bellName.textContent = info.name;
+                bellDesc.textContent = info.desc;
+            });
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            const info = bellStateInfo[currentBellState];
+            
+            // Correlated motion for entangled qubits
+            const baseAngle = Math.sin(time) * 0.8;
+            
+            if (info.correlated) {
+                // |Φ⟩ states: same direction
+                qubit1.arrow.rotation.x = baseAngle;
+                qubit2.arrow.rotation.x = baseAngle;
+            } else {
+                // |Ψ⟩ states: opposite direction
+                qubit1.arrow.rotation.x = baseAngle;
+                qubit2.arrow.rotation.x = -baseAngle;
+            }
+            
+            // Phase visualization through z rotation
+            qubit1.arrow.rotation.z = Math.cos(time * 0.5) * 0.3;
+            qubit2.arrow.rotation.z = info.phase * Math.cos(time * 0.5) * 0.3;
+            
+            // Pulse entanglement line
+            entanglementLine.material.opacity = 0.5 + Math.sin(time * 3) * 0.3;
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Gates - Multiple-Qubit States</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concept 6: Quantum Gates on Multiple Qubits</h1>
+            <p class="subtitle">Single-Qubit Gates and the CNOT Gate</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <a href="../05-dimension-growth/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../07-generating-entanglement/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+
+        <div class="section full-width">
+            <h2>Interactive CNOT Gate Visualization</h2>
+            <div id="canvas-container"></div>
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label>Input State:</label>
+                    <select id="input-state" style="padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.5); color: white; border: 1px solid #00d4ff; width: 100%;">
+                        <option value="00">|00⟩</option>
+                        <option value="01">|01⟩</option>
+                        <option value="10">|10⟩</option>
+                        <option value="11">|11⟩</option>
+                    </select>
+                </div>
+                <div class="state-info">
+                    <h4>CNOT Action</h4>
+                    <p id="cnot-result">|00⟩ → |00⟩ (target unchanged, control is |0⟩)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="section">
+                <h2>Single-Qubit Gates on Multi-Qubit Systems</h2>
+                <p>When applying a single-qubit gate U to one qubit of a multi-qubit system, we use the tensor product with identity:</p>
+                
+                <h3>Gate on First Qubit</h3>
+                <div class="formula">
+                    U ⊗ I
+                </div>
+                <p>U acts on qubit 1, I (identity) acts on qubit 2</p>
+                
+                <h3>Gate on Second Qubit</h3>
+                <div class="formula">
+                    I ⊗ U
+                </div>
+                <p>I acts on qubit 1, U acts on qubit 2</p>
+                
+                <div class="example">
+                    <h3>Example: Hadamard on First Qubit</h3>
+                    <div class="formula">
+                        (H ⊗ I)|00⟩ = H|0⟩ ⊗ I|0⟩<br>
+                        = |+⟩ ⊗ |0⟩<br>
+                        = (|00⟩ + |10⟩)/√2
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>The CNOT Gate</h2>
+                <p>The most important two-qubit gate is the <span class="highlight">CNOT (Controlled-NOT)</span> gate:</p>
+                
+                <div class="formula">
+                    CNOT = <br>
+                    [1 0 0 0]<br>
+                    [0 1 0 0]<br>
+                    [0 0 0 1]<br>
+                    [0 0 1 0]
+                </div>
+                
+                <div class="key-point">
+                    <strong>Action:</strong> CNOT flips the target qubit if and only if the control qubit is |1⟩.
+                </div>
+                
+                <p>The first qubit is the <span class="highlight">control</span>, the second is the <span class="highlight">target</span>.</p>
+            </div>
+
+            <div class="section full-width">
+                <h2>CNOT Truth Table</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Input</th>
+                            <th>Control</th>
+                            <th>Target</th>
+                            <th>Output</th>
+                            <th>Explanation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>|00⟩</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>|00⟩</td>
+                            <td>Control is 0, target unchanged</td>
+                        </tr>
+                        <tr>
+                            <td>|01⟩</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>|01⟩</td>
+                            <td>Control is 0, target unchanged</td>
+                        </tr>
+                        <tr>
+                            <td>|10⟩</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>|11⟩</td>
+                            <td>Control is 1, target FLIPPED</td>
+                        </tr>
+                        <tr>
+                            <td>|11⟩</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>|10⟩</td>
+                            <td>Control is 1, target FLIPPED</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>Circuit Notation</h2>
+                <div class="circuit-container">
+                    <pre style="color: #00d4ff; font-size: 1.2em;">
+    Control ──●──
+              │
+    Target  ──⊕──
+                    </pre>
+                </div>
+                <p>The dot (●) represents the control qubit, and the circle with plus (⊕) represents the target qubit that gets flipped.</p>
+            </div>
+
+            <div class="section">
+                <h2>Other Two-Qubit Gates</h2>
+                
+                <div class="basis-states">
+                    <div class="basis-state-card">
+                        <h4>CZ (Controlled-Z)</h4>
+                        <p>Applies Z gate to target when control is |1⟩</p>
+                        <p>|11⟩ → -|11⟩</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>SWAP</h4>
+                        <p>Exchanges the states of two qubits</p>
+                        <p>|01⟩ ↔ |10⟩</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>iSWAP</h4>
+                        <p>SWAP with phase factor i</p>
+                        <p>Used in superconducting qubits</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>Toffoli (CCNOT)</h4>
+                        <p>3-qubit gate: flips target if both controls are |1⟩</p>
+                        <p>Universal for classical computation</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Python Example: Quantum Gates</h2>
+                
+                <div class="code-block">
+<pre>import numpy as np
+
+# Define single-qubit gates
+I = np.eye(2)
+X = np.array([[0, 1], [1, 0]])
+H = np.array([[1, 1], [1, -1]]) / np.sqrt(2)
+
+# CNOT gate (4x4 matrix)
+CNOT = np.array([
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 0, 1],
+    [0, 0, 1, 0]
+])
+
+# Basis states
+ket_00 = np.array([1, 0, 0, 0])
+ket_01 = np.array([0, 1, 0, 0])
+ket_10 = np.array([0, 0, 1, 0])
+ket_11 = np.array([0, 0, 0, 1])
+
+print("CNOT Gate Action:")
+print(f"|00⟩ → {CNOT @ ket_00}")
+print(f"|01⟩ → {CNOT @ ket_01}")
+print(f"|10⟩ → {CNOT @ ket_10}")
+print(f"|11⟩ → {CNOT @ ket_11}")
+
+# Hadamard on first qubit: H ⊗ I
+H_I = np.kron(H, I)
+print(f"\n(H ⊗ I)|00⟩ = {H_I @ ket_00}")
+
+# Hadamard on second qubit: I ⊗ H
+I_H = np.kron(I, H)
+print(f"(I ⊗ H)|00⟩ = {I_H @ ket_00}")
+
+# Combined: CNOT(H ⊗ I)|00⟩ creates Bell state!
+result = CNOT @ (H_I @ ket_00)
+print(f"\nCNOT(H ⊗ I)|00⟩ = {result}")
+print("This is the Bell state |Φ+⟩!")</pre>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Key Takeaways</h2>
+                <div class="key-point">
+                    <ul>
+                        <li>Single-qubit gates on multi-qubit systems use tensor products with identity</li>
+                        <li>CNOT is the fundamental two-qubit gate</li>
+                        <li>CNOT flips the target qubit when the control is |1⟩</li>
+                        <li>CNOT combined with single-qubit gates is universal for quantum computation</li>
+                        <li>CNOT is essential for creating entanglement</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="../05-dimension-growth/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../07-generating-entanglement/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let controlQubit, targetQubit, cnotLine;
+        let inputState = '00';
+        
+        const cnotResults = {
+            '00': { output: '00', desc: '|00⟩ → |00⟩ (target unchanged, control is |0⟩)' },
+            '01': { output: '01', desc: '|01⟩ → |01⟩ (target unchanged, control is |0⟩)' },
+            '10': { output: '11', desc: '|10⟩ → |11⟩ (target FLIPPED, control is |1⟩)' },
+            '11': { output: '10', desc: '|11⟩ → |10⟩ (target FLIPPED, control is |1⟩)' }
+        };
+        
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 12);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            
+            createVisualization();
+            setupControls();
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00d4ff, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+        }
+        
+        function createVisualization() {
+            // Control qubit (top)
+            controlQubit = createQubit(0, 2, 0, 0x00d4ff, "Control");
+            
+            // Target qubit (bottom)
+            targetQubit = createQubit(0, -2, 0, 0xff6b9d, "Target");
+            
+            // CNOT connection line
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffd700, linewidth: 2 });
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(0, 2, 0),
+                new THREE.Vector3(0, -2, 0)
+            ]);
+            cnotLine = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(cnotLine);
+            
+            // Control dot
+            const dotGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+            const dotMaterial = new THREE.MeshPhongMaterial({ color: 0xffd700 });
+            const controlDot = new THREE.Mesh(dotGeometry, dotMaterial);
+            controlDot.position.set(0, 2, 0);
+            scene.add(controlDot);
+            
+            // Target XOR symbol (torus)
+            const torusGeometry = new THREE.TorusGeometry(0.4, 0.08, 16, 32);
+            const torusMaterial = new THREE.MeshPhongMaterial({ color: 0xffd700 });
+            const targetSymbol = new THREE.Mesh(torusGeometry, torusMaterial);
+            targetSymbol.position.set(0, -2, 0);
+            targetSymbol.rotation.x = Math.PI / 2;
+            scene.add(targetSymbol);
+            
+            // Plus sign inside torus
+            const plusMaterial = new THREE.LineBasicMaterial({ color: 0xffd700 });
+            const hLine = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-0.3, -2, 0),
+                new THREE.Vector3(0.3, -2, 0)
+            ]);
+            const vLine = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(0, -2, -0.3),
+                new THREE.Vector3(0, -2, 0.3)
+            ]);
+            scene.add(new THREE.Line(hLine, plusMaterial));
+            scene.add(new THREE.Line(vLine, plusMaterial));
+        }
+        
+        function createQubit(x, y, z, color, label) {
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+            
+            // Bloch sphere
+            const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+            const sphereMaterial = new THREE.MeshBasicMaterial({
+                color: color,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            group.add(sphere);
+            
+            // State vector
+            const arrowGroup = new THREE.Group();
+            const shaftGeometry = new THREE.CylinderGeometry(0.04, 0.04, 0.8, 16);
+            const shaftMaterial = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.3 });
+            const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
+            shaft.position.y = 0.4;
+            arrowGroup.add(shaft);
+            
+            const coneGeometry = new THREE.ConeGeometry(0.12, 0.2, 16);
+            const cone = new THREE.Mesh(coneGeometry, shaftMaterial);
+            cone.position.y = 0.9;
+            arrowGroup.add(cone);
+            
+            group.add(arrowGroup);
+            group.arrow = arrowGroup;
+            
+            // Label
+            addLabel(x + 2, y, z, label);
+            
+            scene.add(group);
+            return group;
+        }
+        
+        function addLabel(x, y, z, text) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, 128, 40);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.position.set(x, y, z);
+            sprite.scale.set(2, 0.5, 1);
+            scene.add(sprite);
+        }
+        
+        function setupControls() {
+            const select = document.getElementById('input-state');
+            const resultDisplay = document.getElementById('cnot-result');
+            
+            select.addEventListener('change', (e) => {
+                inputState = e.target.value;
+                const result = cnotResults[inputState];
+                resultDisplay.textContent = result.desc;
+                updateQubitStates();
+            });
+        }
+        
+        function updateQubitStates() {
+            // Update visual representation based on input state
+            const controlBit = inputState[0];
+            const targetBit = inputState[1];
+            const outputTarget = cnotResults[inputState].output[1];
+            
+            // Control qubit: point up for |0⟩, down for |1⟩
+            controlQubit.arrow.rotation.x = controlBit === '0' ? 0 : Math.PI;
+            
+            // Target qubit: show flip animation if control is 1
+            targetQubit.arrow.rotation.x = outputTarget === '0' ? 0 : Math.PI;
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            
+            // Gentle rotation
+            controlQubit.arrow.rotation.z = Math.sin(time * 0.5) * 0.1;
+            targetQubit.arrow.rotation.z = Math.sin(time * 0.5 + 1) * 0.1;
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

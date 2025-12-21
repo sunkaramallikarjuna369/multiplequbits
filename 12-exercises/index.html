@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises - Multiple-Qubit States</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concept 12: Exercises</h1>
+            <p class="subtitle">Practice Problems with Interactive Solutions</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <a href="../11-ghz-state/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../13-summary/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+
+        <div class="content-grid">
+            <div class="section full-width exercise-section">
+                <h2>Exercise 1: Tensor Product Calculation</h2>
+                <div class="exercise-problem">
+                    <p><strong>Problem:</strong> Calculate the tensor product |+⟩ ⊗ |1⟩ where |+⟩ = (|0⟩ + |1⟩)/√2</p>
+                </div>
+                <button class="solution-toggle" onclick="toggleSolution('sol1')">Show Solution</button>
+                <div id="sol1" class="solution" style="display: none;">
+                    <h3>Solution:</h3>
+                    <div class="formula">
+                        |+⟩ ⊗ |1⟩ = (|0⟩ + |1⟩)/√2 ⊗ |1⟩
+                    </div>
+                    <div class="formula">
+                        = (|0⟩ ⊗ |1⟩ + |1⟩ ⊗ |1⟩)/√2
+                    </div>
+                    <div class="formula">
+                        = (|01⟩ + |11⟩)/√2
+                    </div>
+                    <p>As a vector: [0, 1/√2, 0, 1/√2]<sup>T</sup></p>
+                    <div class="code-block">
+<pre>import numpy as np
+ket_plus = np.array([1, 1]) / np.sqrt(2)
+ket_1 = np.array([0, 1])
+result = np.kron(ket_plus, ket_1)
+print(f"Result: {result}")
+# Output: [0.  0.707  0.  0.707]</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width exercise-section">
+                <h2>Exercise 2: Separability Test</h2>
+                <div class="exercise-problem">
+                    <p><strong>Problem:</strong> Is the state |ψ⟩ = (|00⟩ + |01⟩ + |10⟩ + |11⟩)/2 entangled or separable?</p>
+                </div>
+                <button class="solution-toggle" onclick="toggleSolution('sol2')">Show Solution</button>
+                <div id="sol2" class="solution" style="display: none;">
+                    <h3>Solution:</h3>
+                    <p>Let's try to factor this state:</p>
+                    <div class="formula">
+                        |ψ⟩ = (|00⟩ + |01⟩ + |10⟩ + |11⟩)/2
+                    </div>
+                    <p>We can rewrite this as:</p>
+                    <div class="formula">
+                        = (|0⟩ + |1⟩)/√2 ⊗ (|0⟩ + |1⟩)/√2 = |+⟩ ⊗ |+⟩
+                    </div>
+                    <div class="key-point">
+                        <strong>Answer:</strong> This state is <strong>SEPARABLE</strong> (not entangled). It's the product of two |+⟩ states.
+                    </div>
+                    <div class="code-block">
+<pre>import numpy as np
+# The state
+psi = np.array([1, 1, 1, 1]) / 2
+# Check if separable using SVD
+matrix = psi.reshape(2, 2)
+U, S, Vh = np.linalg.svd(matrix)
+rank = np.sum(S > 1e-10)
+print(f"Rank: {rank}")  # Rank = 1 means separable
+# Output: Rank: 1 (Separable!)</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width exercise-section">
+                <h2>Exercise 3: CNOT Action</h2>
+                <div class="exercise-problem">
+                    <p><strong>Problem:</strong> What is the result of applying CNOT to the state (|0⟩ + |1⟩)/√2 ⊗ |1⟩?</p>
+                </div>
+                <button class="solution-toggle" onclick="toggleSolution('sol3')">Show Solution</button>
+                <div id="sol3" class="solution" style="display: none;">
+                    <h3>Solution:</h3>
+                    <p>First, expand the input state:</p>
+                    <div class="formula">
+                        |ψ⟩ = (|0⟩ + |1⟩)/√2 ⊗ |1⟩ = (|01⟩ + |11⟩)/√2
+                    </div>
+                    <p>Apply CNOT (control=first qubit, target=second qubit):</p>
+                    <div class="formula">
+                        CNOT|01⟩ = |01⟩ (control is 0, no flip)
+                    </div>
+                    <div class="formula">
+                        CNOT|11⟩ = |10⟩ (control is 1, target flips)
+                    </div>
+                    <div class="formula">
+                        CNOT|ψ⟩ = (|01⟩ + |10⟩)/√2 = |Ψ<sup>+</sup>⟩
+                    </div>
+                    <div class="key-point">
+                        <strong>Answer:</strong> The result is the Bell state |Ψ<sup>+</sup>⟩!
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width exercise-section">
+                <h2>Exercise 4: Measurement Probabilities</h2>
+                <div class="exercise-problem">
+                    <p><strong>Problem:</strong> For the state |ψ⟩ = (|00⟩ + 2|01⟩ + |10⟩)/√6, calculate all measurement probabilities.</p>
+                </div>
+                <button class="solution-toggle" onclick="toggleSolution('sol4')">Show Solution</button>
+                <div id="sol4" class="solution" style="display: none;">
+                    <h3>Solution:</h3>
+                    <p>The amplitudes are: α<sub>00</sub> = 1/√6, α<sub>01</sub> = 2/√6, α<sub>10</sub> = 1/√6, α<sub>11</sub> = 0</p>
+                    <p>Probabilities are |amplitude|²:</p>
+                    <div class="formula">
+                        P(00) = |1/√6|² = 1/6 ≈ 16.67%
+                    </div>
+                    <div class="formula">
+                        P(01) = |2/√6|² = 4/6 = 2/3 ≈ 66.67%
+                    </div>
+                    <div class="formula">
+                        P(10) = |1/√6|² = 1/6 ≈ 16.67%
+                    </div>
+                    <div class="formula">
+                        P(11) = 0
+                    </div>
+                    <p>Verification: 1/6 + 4/6 + 1/6 + 0 = 6/6 = 1 ✓</p>
+                </div>
+            </div>
+
+            <div class="section full-width exercise-section">
+                <h2>Exercise 5: Bell State Identification</h2>
+                <div class="exercise-problem">
+                    <p><strong>Problem:</strong> Which Bell state has the property that measuring both qubits always gives opposite results?</p>
+                </div>
+                <button class="solution-toggle" onclick="toggleSolution('sol5')">Show Solution</button>
+                <div id="sol5" class="solution" style="display: none;">
+                    <h3>Solution:</h3>
+                    <p>The four Bell states are:</p>
+                    <ul>
+                        <li>|Φ<sup>+</sup>⟩ = (|00⟩ + |11⟩)/√2 → Same outcomes (00 or 11)</li>
+                        <li>|Φ<sup>-</sup>⟩ = (|00⟩ - |11⟩)/√2 → Same outcomes (00 or 11)</li>
+                        <li>|Ψ<sup>+</sup>⟩ = (|01⟩ + |10⟩)/√2 → <strong>Opposite outcomes</strong> (01 or 10)</li>
+                        <li>|Ψ<sup>-</sup>⟩ = (|01⟩ - |10⟩)/√2 → <strong>Opposite outcomes</strong> (01 or 10)</li>
+                    </ul>
+                    <div class="key-point">
+                        <strong>Answer:</strong> Both |Ψ<sup>+</sup>⟩ and |Ψ<sup>-</sup>⟩ give opposite measurement results. These are called "anti-correlated" Bell states.
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width exercise-section">
+                <h2>Exercise 6: Dimension Calculation</h2>
+                <div class="exercise-problem">
+                    <p><strong>Problem:</strong> How many complex numbers are needed to fully describe a 7-qubit pure state?</p>
+                </div>
+                <button class="solution-toggle" onclick="toggleSolution('sol6')">Show Solution</button>
+                <div id="sol6" class="solution" style="display: none;">
+                    <h3>Solution:</h3>
+                    <p>For n qubits, the Hilbert space dimension is 2<sup>n</sup>.</p>
+                    <div class="formula">
+                        n = 7 → dim = 2<sup>7</sup> = 128
+                    </div>
+                    <div class="key-point">
+                        <strong>Answer:</strong> 128 complex numbers are needed to describe a 7-qubit pure state.
+                    </div>
+                    <p>Note: Due to normalization and global phase freedom, only 2×128 - 2 = 254 real parameters are actually independent.</p>
+                </div>
+            </div>
+
+            <div class="section full-width exercise-section">
+                <h2>Exercise 7: Creating Entanglement</h2>
+                <div class="exercise-problem">
+                    <p><strong>Problem:</strong> Starting from |01⟩, what gates should you apply to create the Bell state |Ψ<sup>+</sup>⟩ = (|01⟩ + |10⟩)/√2?</p>
+                </div>
+                <button class="solution-toggle" onclick="toggleSolution('sol7')">Show Solution</button>
+                <div id="sol7" class="solution" style="display: none;">
+                    <h3>Solution:</h3>
+                    <p>Apply Hadamard to the first qubit, then CNOT:</p>
+                    <div class="formula">
+                        |01⟩ → (H ⊗ I)|01⟩ = (|0⟩ + |1⟩)/√2 ⊗ |1⟩ = (|01⟩ + |11⟩)/√2
+                    </div>
+                    <div class="formula">
+                        → CNOT(|01⟩ + |11⟩)/√2 = (|01⟩ + |10⟩)/√2 = |Ψ<sup>+</sup>⟩
+                    </div>
+                    <div class="key-point">
+                        <strong>Answer:</strong> Apply H ⊗ I followed by CNOT. This is the same circuit as for creating |Φ<sup>+</sup>⟩ from |00⟩!
+                    </div>
+                </div>
+            </div>
+
+            <div class="section full-width exercise-section">
+                <h2>Exercise 8: Partial Trace</h2>
+                <div class="exercise-problem">
+                    <p><strong>Problem:</strong> What is the reduced density matrix ρ<sub>A</sub> for the state |ψ⟩ = |01⟩?</p>
+                </div>
+                <button class="solution-toggle" onclick="toggleSolution('sol8')">Show Solution</button>
+                <div id="sol8" class="solution" style="display: none;">
+                    <h3>Solution:</h3>
+                    <p>For the product state |01⟩ = |0⟩<sub>A</sub> ⊗ |1⟩<sub>B</sub>:</p>
+                    <div class="formula">
+                        ρ<sub>AB</sub> = |01⟩⟨01|
+                    </div>
+                    <p>The partial trace over B gives:</p>
+                    <div class="formula">
+                        ρ<sub>A</sub> = Tr<sub>B</sub>(|01⟩⟨01|) = |0⟩⟨0|
+                    </div>
+                    <div class="key-point">
+                        <strong>Answer:</strong> ρ<sub>A</sub> = |0⟩⟨0| = [[1, 0], [0, 0]]
+                    </div>
+                    <p>This is a pure state, as expected for a product state.</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="../11-ghz-state/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../13-summary/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+    </div>
+
+    <script>
+        function toggleSolution(id) {
+            const solution = document.getElementById(id);
+            const button = solution.previousElementSibling;
+            if (solution.style.display === 'none') {
+                solution.style.display = 'block';
+                button.textContent = 'Hide Solution';
+            } else {
+                solution.style.display = 'none';
+                button.textContent = 'Show Solution';
+            }
+        }
+    </script>
+
+    <style>
+        .exercise-section {
+            margin-bottom: 30px;
+        }
+        
+        .exercise-problem {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #00d4ff;
+            margin-bottom: 15px;
+        }
+        
+        .solution-toggle {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .solution-toggle:hover {
+            background: #ff4081;
+        }
+        
+        .solution {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</body>
+</html>

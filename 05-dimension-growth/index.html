@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimension Growth - Multiple-Qubit States</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Concept 5: Dimension Growth</h1>
+            <p class="subtitle">The Exponential Power of Quantum Systems</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <a href="../04-bell-states/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../06-quantum-gates/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+
+        <div class="section full-width">
+            <h2>Interactive Dimension Growth Visualization</h2>
+            <div id="canvas-container"></div>
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label>Number of Qubits: <span class="value-display" id="qubit-count">3</span></label>
+                    <input type="range" class="slider" id="qubit-slider" min="1" max="6" value="3">
+                </div>
+                <div class="state-info">
+                    <h4>Hilbert Space Dimension</h4>
+                    <p id="dimension-display">2³ = 8 basis states</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="section full-width">
+                <h2>Exponential Scaling</h2>
+                <p>The dimension of the Hilbert space grows <span class="highlight">exponentially</span> with the number of qubits:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Number of Qubits (n)</th>
+                            <th>Vector Dimension (2<sup>n</sup>)</th>
+                            <th>Basis States</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>|0⟩, |1⟩</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>4</td>
+                            <td>|00⟩, |01⟩, |10⟩, |11⟩</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>8</td>
+                            <td>|000⟩ to |111⟩</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>1,024</td>
+                            <td>1,024 orthonormal states</td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>1,048,576</td>
+                            <td>~1 million states</td>
+                        </tr>
+                        <tr>
+                            <td>50</td>
+                            <td>~10<sup>15</sup></td>
+                            <td>~1 quadrillion states</td>
+                        </tr>
+                        <tr>
+                            <td>100</td>
+                            <td>~10<sup>30</sup></td>
+                            <td>More than atoms in the universe!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>Quantum Parallelism</h2>
+                <p>This exponential growth is the source of <span class="highlight">quantum parallelism</span>:</p>
+                
+                <div class="key-point">
+                    <strong>Key Insight:</strong> A quantum computer with n qubits can process 2<sup>n</sup> states simultaneously through superposition!
+                </div>
+                
+                <p>A quantum state can be in a superposition of all 2<sup>n</sup> basis states:</p>
+                
+                <div class="formula">
+                    |ψ⟩ = Σ<sub>k=0</sub><sup>2<sup>n</sup>-1</sup> α<sub>k</sub>|k⟩
+                </div>
+                
+                <p>Where |k⟩ represents the binary encoding of integer k.</p>
+            </div>
+
+            <div class="section">
+                <h2>Classical vs Quantum</h2>
+                
+                <h3>Classical Computer</h3>
+                <ul>
+                    <li>n bits can represent ONE of 2<sup>n</sup> states</li>
+                    <li>Must process states sequentially</li>
+                    <li>Memory scales linearly with n</li>
+                </ul>
+                
+                <h3>Quantum Computer</h3>
+                <ul>
+                    <li>n qubits can represent ALL 2<sup>n</sup> states simultaneously</li>
+                    <li>Operations act on all states at once</li>
+                    <li>Exponential computational power</li>
+                </ul>
+                
+                <div class="warning">
+                    <strong>Caveat:</strong> We can only extract limited information through measurement. The art of quantum algorithms is designing interference patterns that amplify correct answers.
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Memory Requirements</h2>
+                <p>To simulate a quantum computer classically, we need to store 2<sup>n</sup> complex amplitudes:</p>
+                
+                <div class="basis-states">
+                    <div class="basis-state-card">
+                        <h4>30 Qubits</h4>
+                        <p>2<sup>30</sup> = 1 billion amplitudes</p>
+                        <p>~16 GB RAM (complex doubles)</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>40 Qubits</h4>
+                        <p>2<sup>40</sup> = 1 trillion amplitudes</p>
+                        <p>~16 TB RAM</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>50 Qubits</h4>
+                        <p>2<sup>50</sup> amplitudes</p>
+                        <p>~16 PB RAM (impossible!)</p>
+                    </div>
+                    <div class="basis-state-card">
+                        <h4>100 Qubits</h4>
+                        <p>2<sup>100</sup> amplitudes</p>
+                        <p>More than atoms in universe!</p>
+                    </div>
+                </div>
+                
+                <div class="key-point">
+                    <strong>Quantum Supremacy:</strong> Around 50-60 qubits, quantum computers can perform calculations that are practically impossible for classical computers to simulate.
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Python Example: Dimension Growth</h2>
+                
+                <div class="code-block">
+<pre>import numpy as np
+
+def hilbert_space_info(n_qubits):
+    """Calculate Hilbert space properties for n qubits."""
+    dimension = 2 ** n_qubits
+    
+    # Memory for complex128 (16 bytes per amplitude)
+    memory_bytes = dimension * 16
+    
+    if memory_bytes < 1024:
+        memory_str = f"{memory_bytes} B"
+    elif memory_bytes < 1024**2:
+        memory_str = f"{memory_bytes/1024:.2f} KB"
+    elif memory_bytes < 1024**3:
+        memory_str = f"{memory_bytes/1024**2:.2f} MB"
+    elif memory_bytes < 1024**4:
+        memory_str = f"{memory_bytes/1024**3:.2f} GB"
+    elif memory_bytes < 1024**5:
+        memory_str = f"{memory_bytes/1024**4:.2f} TB"
+    else:
+        memory_str = f"{memory_bytes/1024**5:.2f} PB"
+    
+    return dimension, memory_str
+
+print("Hilbert Space Dimension Growth:")
+print("-" * 50)
+for n in range(1, 21):
+    dim, mem = hilbert_space_info(n)
+    print(f"{n:2d} qubits: 2^{n:2d} = {dim:>15,} states, Memory: {mem}")
+
+# Create a random n-qubit state
+n = 3
+random_state = np.random.randn(2**n) + 1j * np.random.randn(2**n)
+random_state /= np.linalg.norm(random_state)  # Normalize
+
+print(f"\nRandom {n}-qubit state (normalized):")
+for i, amp in enumerate(random_state):
+    binary = format(i, f'0{n}b')
+    prob = np.abs(amp)**2
+    print(f"|{binary}⟩: {amp:.4f}, P = {prob:.4f}")</pre>
+                </div>
+            </div>
+
+            <div class="section full-width">
+                <h2>Key Takeaways</h2>
+                <div class="key-point">
+                    <ul>
+                        <li>n qubits span a 2<sup>n</sup>-dimensional Hilbert space</li>
+                        <li>This exponential growth enables quantum parallelism</li>
+                        <li>Classical simulation becomes impossible around 50 qubits</li>
+                        <li>Quantum algorithms exploit this exponential state space</li>
+                        <li>The challenge is extracting useful information through measurement</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="../04-bell-states/index.html" class="btn btn-secondary">Previous</a>
+            <a href="../index.html" class="btn btn-primary">Home</a>
+            <a href="../06-quantum-gates/index.html" class="btn btn-secondary">Next</a>
+        </nav>
+    </div>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let statePoints = [];
+        let numQubits = 3;
+        
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(10, 8, 15);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            
+            createVisualization(numQubits);
+            setupControls();
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00d4ff, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+        }
+        
+        function createVisualization(n) {
+            // Clear existing points
+            statePoints.forEach(p => scene.remove(p));
+            statePoints = [];
+            
+            const numStates = Math.pow(2, n);
+            const colors = [0x00d4ff, 0xff6b9d, 0xffd700, 0x4caf50, 0x9c27b0, 0xff5722];
+            
+            // Arrange points in a 3D pattern
+            for (let i = 0; i < numStates; i++) {
+                const phi = Math.acos(-1 + (2 * i) / numStates);
+                const theta = Math.sqrt(numStates * Math.PI) * phi;
+                
+                const radius = 5 + n * 0.5;
+                const x = radius * Math.cos(theta) * Math.sin(phi);
+                const y = radius * Math.sin(theta) * Math.sin(phi);
+                const z = radius * Math.cos(phi);
+                
+                const geometry = new THREE.SphereGeometry(0.2, 16, 16);
+                const material = new THREE.MeshPhongMaterial({
+                    color: colors[i % colors.length],
+                    emissive: colors[i % colors.length],
+                    emissiveIntensity: 0.3,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const sphere = new THREE.Mesh(geometry, material);
+                sphere.position.set(x, y, z);
+                sphere.userData = { basePos: { x, y, z }, index: i };
+                scene.add(sphere);
+                statePoints.push(sphere);
+            }
+            
+            // Add connecting lines for some states
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0x00d4ff,
+                transparent: true,
+                opacity: 0.2
+            });
+            
+            for (let i = 0; i < Math.min(numStates, 20); i++) {
+                for (let j = i + 1; j < Math.min(numStates, 20); j++) {
+                    if (Math.random() > 0.7) {
+                        const points = [
+                            statePoints[i].position.clone(),
+                            statePoints[j].position.clone()
+                        ];
+                        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                        const line = new THREE.Line(geometry, lineMaterial);
+                        scene.add(line);
+                        statePoints.push(line);
+                    }
+                }
+            }
+        }
+        
+        function setupControls() {
+            const slider = document.getElementById('qubit-slider');
+            const qubitCount = document.getElementById('qubit-count');
+            const dimensionDisplay = document.getElementById('dimension-display');
+            
+            slider.addEventListener('input', (e) => {
+                numQubits = parseInt(e.target.value);
+                qubitCount.textContent = numQubits;
+                const dim = Math.pow(2, numQubits);
+                dimensionDisplay.textContent = `2${superscript(numQubits)} = ${dim} basis states`;
+                createVisualization(numQubits);
+            });
+        }
+        
+        function superscript(n) {
+            const superscripts = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'];
+            return String(n).split('').map(d => superscripts[parseInt(d)]).join('');
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            
+            statePoints.forEach((point, i) => {
+                if (point.userData && point.userData.basePos) {
+                    const base = point.userData.basePos;
+                    const offset = Math.sin(time * 2 + point.userData.index * 0.5) * 0.3;
+                    point.position.y = base.y + offset;
+                }
+            });
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
